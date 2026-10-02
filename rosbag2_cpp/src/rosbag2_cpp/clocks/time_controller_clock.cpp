@@ -176,7 +176,9 @@ bool TimeControllerClock::sleep_until(rcutils_time_point_value_t until)
       if (steady_until > impl_->now_fn()) {
         impl_->is_sleeping = true;
         impl_->wake_up_ = false;
-        impl_->cv.wait_until(lock, steady_until, [&]() {return impl_->wake_up_;});
+        impl_->cv.wait_until(
+          lock, steady_until,
+          [&]() RCPPUTILS_TSA_REQUIRES(impl_->state_mutex) {return impl_->wake_up_;});
         impl_->is_sleeping = false;
       }
     }

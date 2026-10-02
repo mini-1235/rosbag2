@@ -293,6 +293,7 @@ TEST_F(CircularMessageCacheTest, rejects_message_exceeding_size_limit) {
 
   auto buffer = circular_message_cache->get_consumer_buffer()->data();
   EXPECT_EQ(buffer.size(), 0u);
+  circular_message_cache->release_consumer_buffer();
 }
 
 TEST_F(CircularMessageCacheTest, handles_out_of_order_timestamps_gracefully) {
@@ -320,4 +321,5 @@ TEST_F(CircularMessageCacheTest, handles_out_of_order_timestamps_gracefully) {
   auto buffer = circular_message_cache->get_consumer_buffer()->data();
   // Only the newer message should be present
   EXPECT_EQ(buffer.size(), 1u);
+  circular_message_cache->release_consumer_buffer();
 }
